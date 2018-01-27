@@ -1,1 +1,1 @@
-web: python <kboxLyricsBot.py>
+web: python main.py
