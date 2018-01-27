@@ -1,0 +1,1 @@
+web: python <kboxLyricsBot.py>
