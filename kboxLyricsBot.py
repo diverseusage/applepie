@@ -2,10 +2,11 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from bs4 import BeautifulSoup
 import requests
+import os
 
 #Global variables
-botToken = "311880983:AAGg0tpVm1zntz7Sb9EzrhbGCczl1HifID4"
-rootPage = "https://genius.com/"
+botToken = os.environ['BOT_TOKEN']
+rootPage = os.environ['LYRICS_SOURCE_WEBSITE']
 
 def start(bot, update):
     keyboard = [[InlineKeyboardButton("Top Hits", callback_data='Top Hits')],
@@ -22,7 +23,7 @@ To get your youtube playlist,
 2. Sign in to your youtube account by entering /auth 
 3. Enter /setting 
 4. Toggle to 'Suggest liked video' button
-5. Click 'Save & go to chat' button """
+5. Click 'Save & go to chat' button """ + botToken
 
 def button(bot, update):
     query = update.callback_query
