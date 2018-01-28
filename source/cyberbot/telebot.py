@@ -1,9 +1,10 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from bs4 import BeautifulSoup
-import requests
 import os
+
+from lyrics.lyrics_source import LyricsSource
+
 
 class Telebot:
     START_MESSAGE = """Hello {}
@@ -21,45 +22,25 @@ class Telebot:
         self.token = bot_token
         self.run_update()
 
+    # def button(self, bot, update):
+    #     query = update.callback_query
+    #     bot.editMessageText(text="Selected option: %s" % query.data,
+    #                         chat_id=query.message.chat_id,
+    #                         message_id=query.message.message_id)
+
     def start(self, bot, update):
         keyboard = [[InlineKeyboardButton("Top Hits", callback_data='Top Hits')],
                     [InlineKeyboardButton("Top Artists", callback_data='Top Artists')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text(self.START_MESSAGE.format(update.message.from_user.first_name), reply_markup=reply_markup)
 
-    def get_soup_object(self, url):
-        request_result = requests.get(url)
-        request_html_content = request_result.content
-        soup_obj = BeautifulSoup(request_html_content, "html.parser")
-        return soup_obj
-
-    def generate_site_from_input(self, bot, update):
-        input_message = update.message.text
-        input_message_trim = input_message.strip()
-        processed_message = input_message_trim.replace(' ', '-')
-
-        final_url = self.rootPage + processed_message + "-lyrics"
-        return final_url
-
-    def get_raw_lyrics(self, bot, update):
-        final_url = self.generate_site_from_input(bot, update)
-        soup = self.get_soup_object(final_url)
-        raw_lyrics = soup.lyrics
-        return raw_lyrics
-
-    def display_lyrics(self, bot, update):
-        raw_lyrics = self.get_raw_lyrics(bot, update)
-        for tag in raw_lyrics.find_all('a'):
-            tag.replaceWith(tag.text)
-        final_lyrics = raw_lyrics.get_text().rstrip()
-        update.message.reply_text(final_lyrics)
-
     def run_update(self):
         updater = Updater(self.token)
 
         updater.dispatcher.add_handler(CommandHandler('start', self.start))
 
-        updater.dispatcher.add_handler(MessageHandler(Filters.text, self.display_lyrics))
+        lyrics_source = LyricsSource(LyricsSource.UNKNOWN_LYRICS_SOURCE)
+        # updater.dispatcher.add_handler(MessageHandler(Filters.text, lyrics_source.display_lyrics(bot, update)))
 
         updater.start_polling()
         updater.idle()
