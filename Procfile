@@ -1,1 +1,1 @@
-worker: python kboxLyricsBot.py
+worker: python source\main.py
