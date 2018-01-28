@@ -1,1 +1,1 @@
-worker: python kboxLyricsBot.py
+web: python kboxLyricsBot.py
