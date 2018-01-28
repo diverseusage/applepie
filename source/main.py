@@ -68,11 +68,16 @@ def display_lyrics(bot, update):
     update.message.reply_text(final_lyrics)
 
 
-updater = Updater(botToken)
+def main():
+    updater = Updater(botToken)
 
-updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.dispatcher.add_handler(CommandHandler('start', start))
 
-updater.dispatcher.add_handler(MessageHandler(Filters.text, display_lyrics))
+    updater.dispatcher.add_handler(MessageHandler(Filters.text, display_lyrics))
 
-updater.start_polling()
-updater.idle()
+    updater.start_polling()
+    updater.idle()
+
+
+if __name__ == "__main__":
+    main()
