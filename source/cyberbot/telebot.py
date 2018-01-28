@@ -3,7 +3,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 import os
 
-from lyrics.lyrics_source import LyricsSource
+from lyrics.lyrics_manager import LyricsManager
 
 
 class Telebot:
@@ -16,11 +16,6 @@ class Telebot:
         3. Enter /setting 
         4. Toggle to 'Suggest liked video' button
         5. Click 'Save & go to chat' button """
-    rootPage = os.environ['LYRICS_SOURCE_URL']
-
-    def __init__(self, bot_token):
-        self.token = bot_token
-        self.run_update()
 
     # def button(self, bot, update):
     #     query = update.callback_query
@@ -34,13 +29,17 @@ class Telebot:
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text(self.START_MESSAGE.format(update.message.from_user.first_name), reply_markup=reply_markup)
 
+    def display(self, bot, update):
+        lyrics_manager = LyricsManager()
+        message = update.message.text
+        update.message.reply_text(lyrics_manager.display_lyrics(message))
+
     def run_update(self):
         updater = Updater(self.token)
 
         updater.dispatcher.add_handler(CommandHandler('start', self.start))
 
-        lyrics_source = LyricsSource(LyricsSource.UNKNOWN_LYRICS_SOURCE)
-        # updater.dispatcher.add_handler(MessageHandler(Filters.text, lyrics_source.display_lyrics(bot, update)))
+        updater.dispatcher.add_handler(MessageHandler(Filters.text, self.display))
 
         updater.start_polling()
         updater.idle()
