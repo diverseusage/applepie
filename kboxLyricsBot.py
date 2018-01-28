@@ -23,7 +23,7 @@ To get your youtube playlist,
 2. Sign in to your youtube account by entering /auth 
 3. Enter /setting 
 4. Toggle to 'Suggest liked video' button
-5. Click 'Save & go to chat' button """ + botToken
+5. Click 'Save & go to chat' button """
 
 def button(bot, update):
     query = update.callback_query
