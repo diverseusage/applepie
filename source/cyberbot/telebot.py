@@ -1,12 +1,14 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-import os
 
 from lyrics.lyrics_manager import LyricsManager
 
 
 class Telebot:
+    def __init__(self, bot_token):
+        self.token = bot_token
+
     START_MESSAGE = """Hello {}
         Please enter the singer followed by the title of the song. 
         e.g. the chainsmokers closer
